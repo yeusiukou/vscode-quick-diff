@@ -13,6 +13,7 @@
   "activationEvents": [
     "onCommand:quickDiff.open"
   ],
+  "extensionDependencies": ["vscode.git"],
   "extensionKind": [
     "ui",
     "workspace"

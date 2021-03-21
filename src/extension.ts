@@ -14,6 +14,9 @@ let quickPickEntries: Item[];
 let api: GitAPI;
 
 export function activate(context: vscode.ExtensionContext) {
+  const gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git').exports;
+  api = gitExtension.getAPI(1);
+
   context.subscriptions.push(vscode.commands.registerCommand('quickDiff.open', showPicker));
   pick = vscode.window.createQuickPick<Item>();
 
@@ -51,14 +54,25 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function showPicker() {
-  // Access Git api on opening, instead of activation to prevent race-conditions.
-  const gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git').exports;
-  api = gitExtension.getAPI(1);
-  const repo = api.repositories[0];
-
   initSelection = vscode.window.activeTextEditor?.selection;
   initUri = vscode.window.activeTextEditor?.document.uri;
-  quickPickEntries = repo.state.workingTreeChanges.map(c => ({ label: c.uri.path, change: c }));
+  const repo = api.repositories[0];
+  const changes = repo?.state.workingTreeChanges;
+
+  if (changes?.length) {
+    quickPickEntries = changes.map(change => {
+      const filePath = change.uri.path;
+      const rootPath = vscode.workspace.workspaceFolders[0].uri.path;
+      const fileName = filePath.slice(filePath.lastIndexOf('/') + 1);
+      const relativePath = filePath.slice(rootPath.length + 1, filePath.lastIndexOf('/'));
+      return { label: fileName, description: relativePath, change };
+    });
+    pick.enabled = true;
+  } else {
+    quickPickEntries = [{ label: 'No Git changes detected', change: null }];
+    pick.enabled = false;
+  }
+
   pick.items = quickPickEntries;
   pick.show();
 }
