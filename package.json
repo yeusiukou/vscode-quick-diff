@@ -1,6 +1,6 @@
 {
-  "name": "quick-diff",
-  "description": "Quick Diff",
+  "name": "Quick Diff",
+  "description": "Quick keyboard-friendly access to the list of edited files in the repository",
   "author": "Alex Yeusiukou",
   "license": "MIT",
   "version": "0.1.0",
