@@ -1,0 +1,47 @@
+{
+  "name": "quick-diff",
+  "description": "Quick Diff",
+  "author": "Alex Yeusiukou",
+  "license": "MIT",
+  "version": "0.1.0",
+  "publisher": "xroker",
+  "preview": true,
+  "engines": {
+    "vscode": "^1.40.0"
+  },
+  "categories": [],
+  "activationEvents": [
+    "onCommand:quickDiff.open"
+  ],
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "homepage": "https://github.com/xroker/vscode-quick-diff",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xroker/vscode-quick-diff.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xroker/vscode-quick-diff/issues"
+  },
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "title": "Quick Diff",
+        "command": "quickDiff.open"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "@types/node": "^6.14.10",
+    "typescript": "^3.7.5",
+    "vscode": "1.1.17"
+  }
+}
