@@ -69,10 +69,11 @@ function showPicker() {
     });
     pick.enabled = true;
   } else {
-    quickPickEntries = [{ label: 'No Git changes detected', change: null }];
+    quickPickEntries = [{ label: 'No unstaged Git changes detected', change: null }];
     pick.enabled = false;
   }
 
+  pick.value = ''; // Erase previously set filter value.
   pick.items = quickPickEntries;
   pick.show();
 }
