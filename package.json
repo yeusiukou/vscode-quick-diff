@@ -4,7 +4,7 @@
   "description": "Quick keyboard-friendly access to the list of edited files in the repository",
   "author": "Alex Yeusiukou",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "xroker",
   "preview": true,
   "icon": "assets/icon.png",
@@ -15,7 +15,9 @@
   "activationEvents": [
     "onCommand:quickDiff.open"
   ],
-  "extensionDependencies": ["vscode.git"],
+  "extensionDependencies": [
+    "vscode.git"
+  ],
   "extensionKind": [
     "ui",
     "workspace"
