@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     const item: Item = items[0];
     const gitUri = api.toGitUri(item.change.uri, 'HEAD');
-    vscode.commands.executeCommand('vscode.diff', item.change.uri, gitUri, null, { preview: true, preserveFocus: true } as vscode.TextDocumentShowOptions);
+    vscode.commands.executeCommand('vscode.diff', gitUri, item.change.uri, null, { preview: true, preserveFocus: true } as vscode.TextDocumentShowOptions);
   });
 
   // If the picker was closed without selection navigate back to the initial location.
