@@ -6,7 +6,6 @@
   "license": "MIT",
   "version": "0.1.2",
   "publisher": "xroker",
-  "preview": true,
   "icon": "assets/icon.png",
   "engines": {
     "vscode": "^1.40.0"
