@@ -34,6 +34,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     const item: Item = items[0];
     const gitUri = api.toGitUri(item.change.uri, 'HEAD');
+    // Before opening a new diff clean up the old one.
+    if (vscode.window.activeTextEditor.document.uri !== initUri) {
+      vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+    }
     vscode.commands.executeCommand('vscode.diff', gitUri, item.change.uri, null, { preview: true, preserveFocus: true } as vscode.TextDocumentShowOptions);
   });
 
