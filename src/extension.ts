@@ -20,10 +20,17 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('quickDiff.open', showPicker));
   pick = vscode.window.createQuickPick<Item>();
 
-  pick.onDidChangeSelection(() => {
+  pick.onDidChangeSelection(async () => {
     const item: Item = pick.selectedItems[0];
-    vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-    vscode.commands.executeCommand('vscode.open', item.change.uri);
+    await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+    await vscode.commands.executeCommand('vscode.open', item.change.uri);
+    
+    // Navigate to the approximate location of the change.
+    const diff = await api.repositories[0].diffWithHEAD(item.change.uri.path);
+    const firstChangedLine = +diff.match(/(?<=@@ -)(.*?)(?=\,)/g)[0];
+    const position = new vscode.Position(firstChangedLine, 0);
+    jumpTo(new vscode.Selection(position, position));
+
     lastSelected = null;
     pick.hide();
   });
@@ -48,12 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (!initUri) return;
 
     await vscode.commands.executeCommand('vscode.open', initUri);
-    const editor = vscode.window.activeTextEditor;
-    editor.selection = initSelection;
-    editor.revealRange(
-      new vscode.Range(initSelection.start, initSelection.end),
-      vscode.TextEditorRevealType.InCenter
-    );
+    jumpTo(initSelection);
   });
 }
 
@@ -80,4 +82,13 @@ function showPicker() {
   pick.value = ''; // Erase previously set filter value.
   pick.items = quickPickEntries;
   pick.show();
+}
+
+function jumpTo(selection: vscode.Selection) {
+  const editor = vscode.window.activeTextEditor;
+  editor.selection = selection;
+  editor.revealRange(
+    new vscode.Range(selection.start, selection.end),
+    vscode.TextEditorRevealType.InCenter
+  );
 }
