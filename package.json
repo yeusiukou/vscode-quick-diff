@@ -4,7 +4,7 @@
   "description": "Quick keyboard-friendly access to the list of edited files in the repository",
   "author": "Alex Yeusiukou",
   "license": "MIT",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "publisher": "xroker",
   "icon": "assets/icon.png",
   "engines": {
