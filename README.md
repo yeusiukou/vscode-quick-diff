@@ -3,7 +3,8 @@
 Quick keyboard-friendly access to the list of edited files in the repository.
 The extension helps to preview diffs and navigate to the changed files.
 
-![preview](https://user-images.githubusercontent.com/8567013/111924240-b9956000-8a60-11eb-9d77-62a841f3cbc5.gif)
+![Extension preview](https://user-images.githubusercontent.com/8567013/114967711-cde33780-9e29-11eb-8d75-7a0495c15a94.gif)
+
 
 ## How to use
 1. Download the extension from the [marketplace](https://marketplace.visualstudio.com/items?itemName=xRoker.quick-diff)
