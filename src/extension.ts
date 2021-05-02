@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { API as GitAPI, GitExtension, Change } from './types/git'; 
+import { API as GitAPI, GitExtension, Change, Status } from './types/git'; 
 
 interface Item extends vscode.QuickPickItem {
   /** Git information about the changes in a particular file. */
@@ -22,6 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   pick.onDidChangeSelection(async () => {
     const item: Item = pick.selectedItems[0];
+    if (item.change.status === Status.DELETED) {
+      return;
+    }
     await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
     await vscode.commands.executeCommand('vscode.open', item.change.uri);
     
@@ -46,7 +49,9 @@ export function activate(context: vscode.ExtensionContext) {
     if (editor && editor.document.uri !== initUri) {
       vscode.commands.executeCommand('workbench.action.closeActiveEditor');
     }
-    vscode.commands.executeCommand('vscode.diff', gitUri, item.change.uri, null, { preview: true, preserveFocus: true } as vscode.TextDocumentShowOptions);
+    // if the file was deleted, there is nothing to compare. Use the same gitUri, just to be able to preview what was deleted.
+    const uriAfter = item.change.status === Status.DELETED ? gitUri : item.change.uri;
+    vscode.commands.executeCommand('vscode.diff', gitUri, uriAfter, null, { preview: true, preserveFocus: true } as vscode.TextDocumentShowOptions);
   });
 
   // If the picker was closed without selection navigate back to the initial location.
@@ -72,7 +77,8 @@ function showPicker() {
       const rootPath = vscode.workspace.workspaceFolders[0].uri.path;
       const fileName = filePath.slice(filePath.lastIndexOf('/') + 1);
       const relativePath = filePath.slice(rootPath.length + 1, filePath.lastIndexOf('/'));
-      return { label: fileName, description: relativePath, change };
+      const label = fileName + (change.status === Status.DELETED ? ' (Deleted)' : '');
+      return { label, description: relativePath, change };
     });
     pick.enabled = true;
   } else {
